@@ -19,8 +19,8 @@
 
 # ALGORITMA
 from math import sqrt
-from data_centering import *
-from pca_computation import *
+from src.data_centering import *
+from src.pca_computation import *
 
 def proyeksi_query(query : list[float] , k_eigen_vector : list[list[float]] , matrix : list[list[float]]) -> list[list[float]] :
     # DESKRIPSI LOKAL

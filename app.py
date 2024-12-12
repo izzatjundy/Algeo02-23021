@@ -24,10 +24,14 @@ from src.main_sound import *
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER_IMAGE = 'uploads/image'
-app.config['UPLOAD_FOLDER_IMAGE'] = UPLOAD_FOLDER_IMAGE
-UPLOAD_FOLDER_AUDIO = 'uploads/audio'
-app.config['UPLOAD_FOLDER_AUDIO'] = UPLOAD_FOLDER_AUDIO
+DATABASE_FOLDER_IMAGE = 'uploads/database/image'
+app.config['DATABASE_FOLDER_IMAGE'] = DATABASE_FOLDER_IMAGE
+DATABASE_FOLDER_AUDIO = 'uploads/database/audio'
+app.config['DATABASE_FOLDER_AUDIO'] = DATABASE_FOLDER_AUDIO
+QUERY_FOLDER_IMAGE = 'uploads/query/image'
+app.config['QUERY_FOLDER_IMAGE'] = QUERY_FOLDER_IMAGE
+QUERY_FOLDER_AUDIO = 'uploads/query/audio'
+app.config['QUERY_FOLDER_AUDIO'] = QUERY_FOLDER_AUDIO
 
 ALLOWED_EXTENSIONS_IMAGE = {'png', 'jpg', 'jpeg'}
 ALLOWED_EXTENSIONS_AUDIO = {'mid'}
@@ -69,6 +73,7 @@ def go_to_query_audio():
     return render_template('queryaudio.html')
 
 # -----------------------------------------------------------------------------------------------
+# DATABASE
 
 @app.route('/database/image/upload', methods=['POST'])
 def upload_file_image():
@@ -78,11 +83,11 @@ def upload_file_image():
     
     # Check if the file is valid
     if file and allowed_file_image(file.filename):
-        filename = os.path.join(app.config['UPLOAD_FOLDER_IMAGE'], file.filename)
+        filename = os.path.join(app.config['DATABASE_FOLDER_IMAGE'], file.filename)
         file.save(filename)
         return render_template('berhasilmenambah.html')
     else:
-        return render_template('databaseimage.html')
+        return render_template('gagalmenambah.html')
     
 @app.route('/database/audio/upload', methods=['POST'])
 def upload_file_audio():
@@ -92,15 +97,45 @@ def upload_file_audio():
     
     # Check if the file is valid
     if file and allowed_file_audio(file.filename):
-        filename = os.path.join(app.config['UPLOAD_FOLDER_AUDIO'], file.filename)
+        filename = os.path.join(app.config['DATABASE_FOLDER_AUDIO'], file.filename)
         file.save(filename)
         return render_template('berhasilmenambah.html')
     else:
         return render_template('databaseaudio.html')
 
+# -----------------------------------------------------------------------------------------------
+# QUERY
+
+@app.route('/query/image/upload', methods=['POST'])
+def query_image():
+    if 'file' not in request.files:
+        return redirect(request.url)
+    file = request.files['file']
+    
+    # Check if the file is valid
+    if file and allowed_file_image(file.filename):
+        filename = os.path.join(app.config['QUERY_FOLDER_IMAGE'], file.filename)
+        file.save(filename)
+
+        images = os.listdir(app.config['DATABASE_FOLDER_IMAGE'])
+        images = [img for img in images if img.endswith(('jpg', 'jpeg', 'png'))]
+        print(str(app.config['QUERY_FOLDER_IMAGE'] + '/' + file.filename))
+        urutan_kemiripan = website_information(convert_picture(str(app.config['QUERY_FOLDER_IMAGE'] + '/' + file.filename)), "picture", app.config['DATABASE_FOLDER_IMAGE'])
+        images_sorted = [img for img in urutan_kemiripan if img in images]
+
+        return render_template('hasilqueryimage.html', images=images_sorted)
+    else:
+        return render_template('gagalmenambah.html')
+    
+
+
 if __name__ == '__main__':
-    if not os.path.exists(UPLOAD_FOLDER_IMAGE):
-        os.makedirs(UPLOAD_FOLDER_IMAGE)
-    if not os.path.exists(UPLOAD_FOLDER_AUDIO):
-        os.makedirs(UPLOAD_FOLDER_AUDIO)
+    if not os.path.exists(DATABASE_FOLDER_IMAGE):
+        os.makedirs(DATABASE_FOLDER_IMAGE)
+    if not os.path.exists(DATABASE_FOLDER_AUDIO):
+        os.makedirs(DATABASE_FOLDER_AUDIO)
+    if not os.path.exists(QUERY_FOLDER_IMAGE):
+        os.makedirs(QUERY_FOLDER_IMAGE)
+    if not os.path.exists(QUERY_FOLDER_AUDIO):
+        os.makedirs(QUERY_FOLDER_AUDIO)
     app.run(debug=True)

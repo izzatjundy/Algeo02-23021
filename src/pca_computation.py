@@ -19,7 +19,7 @@
 
 # ALGORITMA
 import numpy as np
-from data_centering import *
+from src.data_centering import *
 
 def transpose(matrix : list[list[float]]) -> list[list[float]] :
     # DESKRIPSI LOKAL

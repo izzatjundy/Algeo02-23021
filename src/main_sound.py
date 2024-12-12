@@ -17,11 +17,11 @@
 # website_information , terminal_information : procedure
 
 # ALGORITMA
-from picture_conversion import *
-from sound_conversion import *
-from normalisasi_histogram import *
-from cosine_similarity import *
-from retrival_output import *
+from src.picture_conversion import *
+from src.sound_conversion import *
+from src.normalisasi_histogram import *
+from src.cosine_similarity import *
+from src.retrival_output import *
 
 def website_information(query : list[float] , type : str , database : str) -> list[str] :
     # DESKRIPSI LOKAL

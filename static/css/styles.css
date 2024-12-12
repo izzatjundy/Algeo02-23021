@@ -11,7 +11,7 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--color1);
     text-align: center;
-    margin: 50px;
+    margin: 50px 0;
 }
 
 h1 {
@@ -26,6 +26,59 @@ h2 {
     font-size: 250%;
     margin-bottom: 0;
     margin-top: 75px;
+}
+
+.menu{
+    margin-top: 80px;
+}
+
+.opsi{
+    display: inline-block; /* Makes the anchor behave like a block element */
+    padding: 10px 20px; /* Equal padding for both buttons */
+    background-color: var(--color2); /* Button background color */
+    color: var(--color4); /* Text color */
+    text-align: center; /* Center text inside the button */
+    text-decoration: none; /* Remove underline from anchor */
+    border-radius: 5px; /* Optional: rounded corners */
+    border: none; /* Remove default border */
+    font-size: 30px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+    transition: color 0.3s ease;
+    margin: 0px 50px 50px 50px;
+    box-shadow: 5px 5px 1px var(--color4);
+
+    height: 300px; /* Fixed height for both buttons */
+    line-height: 300px;
+    width: 450px;
+}
+
+.opsi:hover{
+    background-color: var(--color4); /* Button background color */
+    color: var(--color2);
+}
+
+.footer a{
+    display: inline-block; /* Makes the anchor behave like a block element */
+    padding: 10px 20px; /* Equal padding for both buttons */
+    color: var(--color4); /* Text color */
+    text-align: center; /* Center text inside the button */
+    text-decoration: none; /* Remove underline from anchor */
+    border-radius: 5px; /* Optional: rounded corners */
+    border: none; /* Remove default border */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+    transition: color 0.3s ease;
+    margin: 0px 5px 5px 5px;
+
+    height: 30px; /* Fixed height for both buttons */
+    line-height: 30px;
+    width: 50px;
+}
+
+.footer a:hover{
+    color: var(--color2);
 }
 
 /*

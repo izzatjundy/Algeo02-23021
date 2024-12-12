@@ -34,7 +34,7 @@ def convert_picture(path : str) -> list[float] :
 
     # ALGORITMA LOKAL
     img = Image.open(path)
-    img = img.resize((512 , 512) , Image.ANTIALIAS)
+    img = img.resize((512 , 512) , Image.Resampling.LANCZOS)
     img = img.convert('RGB')
     pixels = list(img.getdata())
     size = 512 * 512

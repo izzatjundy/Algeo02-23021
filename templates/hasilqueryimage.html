@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geprek Mumbul</title>
+    <link rel="stylesheet" href="./../static/css/styles.css">
+</head>
+<body>
+    <h2>Foto Termirip</h2>
+    <p>Gambar telah diurutkan dari foto yang paling mirip ke yang tidak mirip.</p>
+
+    <div>
+        {% for image in images %}
+            <img src="{{ url_for('uploads', filename='database/image/' + image) }}" alt="{{ image }}" width="200">
+        {% endfor %}
+    </div>
+
+    <div class="footer">
+        <a href="{{ url_for('go_to_menu_query') }}">Kembali</a>
+        <a href="{{ url_for('home') }}">Beranda</a>
+    </div>  
+</body>
+</html>
