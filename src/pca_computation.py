@@ -19,6 +19,7 @@
 
 # ALGORITMA
 import numpy as np
+from math import log2
 from data_centering import *
 
 def transpose(matrix : list[list[float]]) -> list[list[float]] :
@@ -104,15 +105,15 @@ def get_keigen(matrix : list[list[float]]) -> list[list[float]] :
     matrix = data_centering(matrix)
     covarians = make_covarians(matrix)
     (eigen_vector , _ , _) = svd_decomposition(covarians)
-    k = np.linalg.matrix_rank(covarians)
-    size = len(eigen_vector[0])
-    k_eigen_vector = [[0.0 for j in range (size)] for i in range (k)]
-    for i in range (k) :
-        for j in range (size) :
+    k = int(log2(len(matrix)))
+    size = len(eigen_vector)
+    k_eigen_vector = [[0.0 for j in range (k)] for i in range (size)]
+    for i in range (size) :
+        for j in range (k) :
             k_eigen_vector[i][j] = eigen_vector[i][j]
     return k_eigen_vector
 
-def get_z(matrix : list[list[float]]) -> list[list[float]] :
+def get_z(matrix : list[list[float]] , k_eigen_vector : list[list[float]]) -> list[list[float]] :
     # DESKRIPSI LOKAL
     # Menghitung matrix Z berdasarkan perkalian matrix yang sudah distandarisasi dan eigen_vector sebanyak rank.
 
@@ -121,6 +122,6 @@ def get_z(matrix : list[list[float]]) -> list[list[float]] :
     # i , j : integer (index)
 
     # ALGORITMA LOKAL
-    k_eigen_vector = get_keigen(matrix)
+    matrix = data_centering(matrix)
     res = multiply(matrix , k_eigen_vector)
     return res

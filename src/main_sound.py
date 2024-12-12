@@ -19,45 +19,71 @@
 # ALGORITMA
 from picture_conversion import *
 from sound_conversion import *
+from data_centering import *
+from pca_computation import *
 from normalisasi_histogram import *
+from similarity_computation import *
 from cosine_similarity import *
 from retrival_output import *
 
-def website_information(query : list[float] , type : str , database : str) -> list[str] :
+def website_information(query : str , type : str , database : str) -> list[str] :
     # DESKRIPSI LOKAL
     # Mengembalikan array of string (file name) ke website.
 
     # KAMUS LOKAL
-    # query : list of float
+    # list_query , avg : list of float
     # matrix : matrix of float
     # names : list of string
     # data : list of tuple of integer and float
-    # type , database : string
+    # type , database , query : string
+    # size : integer
+    # i : integer (index)
 
     # ALGORITMA LOKAL
     data = []
     if (type == "picture") :
         matrix = data_picture(database)
-        data = jarak_euclidean(query , matrix)
+        avg = find_average(matrix)
+        matrix = data_centering(matrix)
+        list_query = convert_picture(query)
+        size = len(list_query)
+        for i in range (size) :
+            list_query[i] = list_query[i] - avg[i]
+        data = jarak_euclidean(list_query , matrix)
     else :
         matrix = data_sound(database)
-        data = cosine_function(query , matrix)
+        matrix = normalize_histogram(matrix)
+        list_query = convert_picture(query)
+        matrix_query = normalize_histogram(list_query)
+        data = cosine_function(matrix_query[0] , matrix)
     names = array_names(data , type , database)
     return names
 
-def terminal_information(query : list[float] , type : str , database : str) -> None :
+def terminal_information(query : str , type : str , database : str) -> None :
     # DESKRIPSI LOKAL
     # Fungsi untuk melakukan proses pencarian informasi dan melempar ke tipe fungsi output yang bersesuaian.
 
     # KAMUS LOKAL
-    # query : list of float
-    # matrix : matrix of float
-    # type , database , audio_type : string
+    # list_query , avg : list of float
+    # matrix , matrix_query : matrix of float
+    # type , database , audio_type , query : string
+    # size : integer
+    # i : integer (index)
 
     # ALGORITMA LOKAL
+    audio_type = "Waveform"
     if (type == "picture") :
         matrix = data_picture(database)
+        avg = find_average(matrix)
+        matrix = data_centering(matrix)
+        list_query = convert_picture(query)
+        size = len(list_query)
+        for i in range (size) :
+            list_query[i] = list_query[i] - avg[i]
+        information_retrival(list_query , matrix , type , database , audio_type)
     else :
         matrix = data_sound(database)
-    audio_type = "Waveform"
-    information_retrival(query , matrix , type , database , audio_type)
+        matrix = normalize_histogram(matrix)
+        list_query = convert_picture(query)
+        matrix_query = normalize_histogram(list_query)
+        information_retrival(matrix_query[0] , matrix , type , database , audio_type)
