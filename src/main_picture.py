@@ -9,7 +9,7 @@
 # Jurusan      : Teknik Informatika (IF)
 # Nama File    : main_picture.py
 # Topik        : Tugas Besar 2 Aljabar Linier dan Geometri 2024 (IF2123-24)
-# Tanggal      : Kamis, 12 Desember 2024
+# Tanggal      : Senin, 16 Desember 2024
 # Deskripsi    : Subprogram F09 - Main Picture
 # PJ F09       : 13523021 - Muhammad Raihan Nazhim Oktana
 
@@ -25,12 +25,12 @@ from normalisasi_histogram import *
 from similarity_computation import *
 from retrival_output import *
 
-def website_information(query : str , type : str , database : str) -> list[str] :
+def website_information(query : str , type : str , database : str) -> tuple[list[str] , list[float]] :
     # DESKRIPSI LOKAL
     # Mengembalikan array of string (file name) ke website.
 
     # KAMUS LOKAL
-    # list_query , avg : list of float
+    # list_query , avg , percent : list of float
     # matrix : matrix of float
     # names : list of string
     # data : list of tuple of integer and float
@@ -48,15 +48,15 @@ def website_information(query : str , type : str , database : str) -> list[str] 
         size = len(list_query)
         for i in range (size) :
             list_query[i] = list_query[i] - avg[i]
-        data = jarak_euclidean(list_query , matrix)
+        (data , percent) = jarak_euclidean(list_query , matrix)
     else :
         matrix = data_sound(database)
         matrix = normalize_histogram(matrix)
         list_query = convert_picture(query)
         matrix_query = normalize_histogram(list_query)
-        data = cosine_function(matrix_query[0] , matrix)
+        (data , percent) = cosine_function(matrix_query[0] , matrix)
     names = array_names(data , type , database)
-    return names
+    return (names , percent)
 
 def terminal_information(query : str , type : str , database : str) -> None :
     # DESKRIPSI LOKAL
