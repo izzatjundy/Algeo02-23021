@@ -19,6 +19,8 @@
 # ALGORITMA
 from flask import Flask, render_template, request, redirect, url_for
 import os
+import datetime
+import math
 from backend.main_picture import *
 from backend.sound_conversion import *
 
@@ -32,6 +34,7 @@ QUERY_FOLDER_IMAGE = 'static/uploads/query/image'
 app.config['QUERY_FOLDER_IMAGE'] = QUERY_FOLDER_IMAGE
 QUERY_FOLDER_AUDIO = 'static/uploads/query/audio'
 app.config['QUERY_FOLDER_AUDIO'] = QUERY_FOLDER_AUDIO
+app.config['PAGE'] = 0
 
 ALLOWED_EXTENSIONS_IMAGE = {'png', 'jpg', 'jpeg'}
 ALLOWED_EXTENSIONS_AUDIO = {'midi', 'mid'}
@@ -46,10 +49,12 @@ def allowed_file_audio(filename):
 # JUMP PAGE
 @app.route('/')
 def home():
+    app.config['PAGE'] = 0
     return render_template('index.html')
 
 @app.route('/database')
 def go_to_menu_database():
+    app.config['PAGE'] = 0
     return render_template('menudatabase.html')
 
 @app.route('/database/menambah')
@@ -91,14 +96,48 @@ def upload_file():
         return render_template('berhasilmenambah.html')
     else:
         return render_template('gagalmenambah.html')
-    
-@app.route('/database/view')
+
+@app.route('/database/view/next')
+def next_page():
+    with open('./static/uploads/database/mapper.txt', 'r') as file:
+        singles = [line.strip() for line in file]
+    if app.config['PAGE'] < math.ceil(len(singles)/10) - 1: app.config['PAGE']+=1
+    return melihat_database()
+
+@app.route('/database/view/prev')
+def prev_page():
+    if app.config['PAGE'] > 0: app.config['PAGE']-=1
+    return melihat_database()
+
+@app.route('/database/view/' + str(app.config['PAGE']))
 def melihat_database():
     with open('./static/uploads/database/mapper.txt', 'r') as file:
         singles = [line.strip() for line in file]
     singles = [single.split(';') for single in singles]
+    singlesInPage = []
+    i = 0
+    while app.config['PAGE'] * 10 + i < len(singles) and i < 10:
+        singlesInPage.append(singles[app.config['PAGE'] * 10 + i])
+        i+=1
+
     print(singles)
-    return render_template('databasemelihat.html', singles=singles)
+    return render_template('databasemelihat.html', singles=singlesInPage)
+
+# SEARCHING
+@app.route('/database/view/search', methods=['POST'])
+def pencarian_database():
+    keyword = request.form['keyword']
+
+    with open('./static/uploads/database/mapper.txt', 'r') as file:
+        singles = [line.strip() for line in file]
+
+    singles = [single for single in singles if keyword.lower() in single.lower()]
+    singles = [single.split(';') for single in singles]
+
+    print(singles)
+
+    return render_template('databasemelihatsearch.html', singles=singles)
+
 
 # -----------------------------------------------------------------------------------------------
 # QUERY
@@ -118,7 +157,12 @@ def query_image():
         images = [image for image in images if image.endswith(('jpg', 'jpeg', 'png'))]
         filename = str(app.config['QUERY_FOLDER_IMAGE'] + "/" + 'query' + '.' + file.filename.split('.')[-1])
         print(filename)
+        waktuAwal = datetime.datetime.now()
         urutan_kemiripan = website_information(filename, "picture", app.config['DATABASE_FOLDER_IMAGE'])
+        waktuAkhir = datetime.datetime.now()
+
+        durasi = waktuAkhir - waktuAwal
+        durasiDalamMS = durasi.total_seconds() * 1000
 
         print(urutan_kemiripan)
 
@@ -139,7 +183,7 @@ def query_image():
             else: print("ga ada di folder cuks " + filename + ";" + urutan_kemiripan[i][0])
             i+=1
 
-        return render_template('hasilqueryimage.html', singles=singles_sorted_with_percentage)
+        return render_template('hasilqueryimage.html', singles=singles_sorted_with_percentage, durasi=durasiDalamMS)
     else:
         return render_template('gagalmenambah.html')
     
@@ -151,13 +195,14 @@ def query_audio():
     
     # Check if the file is valid
     if file and allowed_file_audio(file.filename):
-        filename = os.path.join(app.config['QUERY_FOLDER_AUDIO'], file.filename)
+        filename = str(app.config['QUERY_FOLDER_AUDIO'] + "\\" + 'query' + '.' + file.filename.split('.')[-1])
         file.save(filename)
 
         audios = os.listdir(app.config['DATABASE_FOLDER_AUDIO'])
         audios = [audio for audio in audios if audio.endswith(('mid', 'midi'))]
-        filename = str(app.config['QUERY_FOLDER_AUDIO'] + '/' + file.filename)
+        filename = str(app.config['QUERY_FOLDER_AUDIO'] + "/" + 'query' + '.' + file.filename.split('.')[-1])
         print(filename)
+
         urutan_kemiripan = retrieval(app.config['DATABASE_FOLDER_AUDIO'], filename)
         for i in range(len(urutan_kemiripan)):
             urutan_kemiripan[i] = (urutan_kemiripan[i][0].split('\\')[-1], urutan_kemiripan[i][1])
