@@ -29,15 +29,16 @@ def convert_picture(path : str) -> list[float] :
     # pixels : list of tuple of integer
     # res : list of float
     # path : string
-    # size : integer
+    # size , n : integer
     # i : integer (index)
 
     # ALGORITMA LOKAL
+    n = 32
     img = Image.open(path)
-    img = img.resize((512 , 512) , Image.Resampling.LANCZOS)
+    img = img.resize((n , n) , Image.Resampling.LANCZOS)
     img = img.convert('RGB')
     pixels = list(img.getdata())
-    size = 512 * 512
+    size = n * n
     res = [0.0 for i in range (size)]
     for i in range (size) :
         res[i] = 0.2989 * pixels[i][0] + 0.5870 * pixels[i][1] + 0.1140 * pixels[i][2]

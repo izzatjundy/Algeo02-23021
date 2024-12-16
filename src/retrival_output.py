@@ -19,6 +19,7 @@
 
 # ALGORITMA
 import os
+import mido
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
@@ -128,11 +129,11 @@ def array_names(data : list[tuple[int , float]] , type : str , database : str) -
     res = ["" for i in range (size)]
     if (type == "picture") :
         for i in range (len(data)) :
-            (_ , name) = picture_index(database , i)
+            (_ , name) = picture_index(database , data[i][0] - 1)
             res[i] = name
     else :
         for i in range (len(data)) :
-            (_ , name) = sound_index(database , i)
+            (_ , name) = sound_index(database , data[i][0] - 1)
             res[i] = name
     return res
 
@@ -148,12 +149,12 @@ def display_output(data : list[tuple[int , float]] , type : str , database : str
     if (type == "picture") :
         print("Berikut adalah daftar informasi gambar yang serupa :")
         for i in range (len(data)) :
-            (path , name) = picture_index(database , i)
+            (path , name) = picture_index(database , data[i][0] - 1)
             print(f"{i + 1}. {name}")
             Image.open(path)
     else :
         print("Berikut adalah daftar informasi suara yang serupa :")
         for i in range (len(data)) :
-            (path , name) = sound_index(database , i)
+            (path , name) = sound_index(database , data[i][0] - 1)
             print(f"{i + 1}. {name}")
             display_audio(path , audio_type)

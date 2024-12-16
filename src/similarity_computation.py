@@ -41,23 +41,6 @@ def proyeksi_query(query : list[float] , k_eigen_vector : list[list[float]] , ma
     res = multiply(matrix_query , k_eigen_vector)
     return res
 
-def count_function(query : list[float] , data : list[float]) -> float :
-    # DESKRIPSI LOKAL
-    # Fungsi untuk menghitung proyeksi jarak euclidian.
-
-    # KAMUS LOKAL
-    # query , data : list of float
-    # sum , res : float
-    # i : integer (index)
-
-    # ALGORITMA LOKAL
-    sum = 0.0
-    size = len(query)
-    for i in range (size) :
-        sum = sum + (query[i] - data[i]) ** 2
-    res = sqrt(sum)
-    return res
-
 def merge(left : list[tuple[int , float]] , right : list[tuple[int , float]]) -> list[tuple[int , float]] :
     # DESKRIPSI LOKAL
     # Fungsi untuk menggabungkan 2 list, sebuah fungsi antara untuk merge sort.
@@ -99,26 +82,43 @@ def merge_sort(data : list[tuple[int , float]]) -> list[tuple[int , float]] :
         res_left = merge_sort(left)
         res_right = merge_sort(right)
         return merge(res_left , res_right)
+    
+def count_function(query : list[float] , data : list[float]) -> float :
+    # DESKRIPSI LOKAL
+    # Fungsi untuk menghitung proyeksi jarak euclidian.
+
+    # KAMUS LOKAL
+    # query , data : list of float
+    # sumq , res : float
+    # i : integer (index)
+
+    # ALGORITMA LOKAL
+    sumq = 0.0
+    size = len(query)
+    for i in range (size) :
+        sumq = sumq + (query[i] - data[i]) * (query[i] - data[i])
+    res = sqrt(sumq)
+    return res
 
 def jarak_euclidean(query : list[float] , matrix : list[list[float]]) -> list[tuple[int , float]] :
     # DESKRIPSI LOKAL
     # Menghitung jarak euclidean antara query dengan setiap data di database dan mengurutkannya.
 
     # KAMUS LOKAL
-    # matrix , matrix_z , k_eigen_vector : matrix of float
+    # matrix , matrix_z , k_eigen_vector , matrix_query : matrix of float
     # data , distance : list of tuple of integer and float
     # query : list of float
     # size : integer
     # i : integer (index)
 
     # ALGORITMA LOKAL
-    matrix_z = get_z(matrix)
     k_eigen_vector = get_keigen(matrix)
-    query = proyeksi_query(query , k_eigen_vector , matrix)
-    size = len(k_eigen_vector)
+    matrix_z = get_z(matrix , k_eigen_vector)
+    matrix_query = proyeksi_query(query , k_eigen_vector , matrix)
+    size = len(matrix_z)
     distance = [[0 , 0.0] for i in range (size)]
     for i in range (size) :
         distance[i][0] = i + 1
-        distance[i][1] = count_function(query , matrix_z[i])
+        distance[i][1] = count_function(matrix_query[0] , matrix_z[i])
     data = merge_sort(distance)
     return data

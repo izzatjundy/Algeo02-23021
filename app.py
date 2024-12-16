@@ -24,17 +24,17 @@ from src.main_sound import *
 
 app = Flask(__name__)
 
-DATABASE_FOLDER_IMAGE = 'uploads/database/image'
+DATABASE_FOLDER_IMAGE = 'static/uploads/database/image'
 app.config['DATABASE_FOLDER_IMAGE'] = DATABASE_FOLDER_IMAGE
-DATABASE_FOLDER_AUDIO = 'uploads/database/audio'
+DATABASE_FOLDER_AUDIO = 'static/uploads/database/audio'
 app.config['DATABASE_FOLDER_AUDIO'] = DATABASE_FOLDER_AUDIO
-QUERY_FOLDER_IMAGE = 'uploads/query/image'
+QUERY_FOLDER_IMAGE = 'static/uploads/query/image'
 app.config['QUERY_FOLDER_IMAGE'] = QUERY_FOLDER_IMAGE
-QUERY_FOLDER_AUDIO = 'uploads/query/audio'
+QUERY_FOLDER_AUDIO = 'static/uploads/query/audio'
 app.config['QUERY_FOLDER_AUDIO'] = QUERY_FOLDER_AUDIO
 
 ALLOWED_EXTENSIONS_IMAGE = {'png', 'jpg', 'jpeg'}
-ALLOWED_EXTENSIONS_AUDIO = {'mid'}
+ALLOWED_EXTENSIONS_AUDIO = {'midi'}
 
 def allowed_file_image(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_IMAGE
@@ -53,12 +53,8 @@ def go_to_menu_database():
     return render_template('menudatabase.html')
 
 @app.route('/database/image')
-def go_to_database_image():
-    return render_template('databaseimage.html')
-
-@app.route('/database/audio')
-def go_to_database_audio():
-    return render_template('databaseaudio.html')
+def go_to_database_menambah():
+    return render_template('databasemenambah.html')
 
 @app.route('/query')
 def go_to_menu_query():
@@ -75,33 +71,34 @@ def go_to_query_audio():
 # -----------------------------------------------------------------------------------------------
 # DATABASE
 
-@app.route('/database/image/upload', methods=['POST'])
-def upload_file_image():
-    if 'file' not in request.files:
+@app.route('/database/menambah/upload', methods=['POST'])
+def upload_file():
+    if 'image' not in request.files or 'audio' not in request.files:
         return redirect(request.url)
-    file = request.files['file']
+    image = request.files['image']
+    audio = request.files['audio']
     
     # Check if the file is valid
-    if file and allowed_file_image(file.filename):
-        filename = os.path.join(app.config['DATABASE_FOLDER_IMAGE'], file.filename)
-        file.save(filename)
+    if image and allowed_file_image(image.filename) and audio and allowed_file_audio(audio.filename):
+        filenameImage = os.path.join(app.config['DATABASE_FOLDER_IMAGE'], image.filename)
+        filenameAudio = os.path.join(app.config['DATABASE_FOLDER_AUDIO'], audio.filename)
+        image.save(filenameImage)
+        audio.save(filenameAudio)
+
+        with open('./static/uploads/database/mapper.txt', 'a') as file:
+            file.write(image.filename + ";" + audio.filename + ";" + request.form['title'] + "\n")
+
         return render_template('berhasilmenambah.html')
     else:
         return render_template('gagalmenambah.html')
     
-@app.route('/database/audio/upload', methods=['POST'])
-def upload_file_audio():
-    if 'file' not in request.files:
-        return redirect(request.url)
-    file = request.files['file']
-    
-    # Check if the file is valid
-    if file and allowed_file_audio(file.filename):
-        filename = os.path.join(app.config['DATABASE_FOLDER_AUDIO'], file.filename)
-        file.save(filename)
-        return render_template('berhasilmenambah.html')
-    else:
-        return render_template('databaseaudio.html')
+@app.route('/database/view')
+def melihat_database():
+    with open('./static/uploads/database/mapper.txt', 'r') as file:
+        singles = [line.strip() for line in file]
+    singles = [single.split(';') for single in singles]
+    print(singles)
+    return render_template('databasemelihat.html', singles=singles)
 
 # -----------------------------------------------------------------------------------------------
 # QUERY
@@ -120,7 +117,7 @@ def query_image():
         images = os.listdir(app.config['DATABASE_FOLDER_IMAGE'])
         images = [img for img in images if img.endswith(('jpg', 'jpeg', 'png'))]
         print(str(app.config['QUERY_FOLDER_IMAGE'] + '/' + file.filename))
-        urutan_kemiripan = website_information(convert_picture(str(app.config['QUERY_FOLDER_IMAGE'] + '/' + file.filename)), "picture", app.config['DATABASE_FOLDER_IMAGE'])
+        urutan_kemiripan = website_information(str(app.config['QUERY_FOLDER_IMAGE'] + '/' + file.filename), "picture", app.config['DATABASE_FOLDER_IMAGE'])
         images_sorted = [img for img in urutan_kemiripan if img in images]
 
         return render_template('hasilqueryimage.html', images=images_sorted)
