@@ -113,7 +113,7 @@ def information_retrival(query : list[float] , matrix : list[list[float]] , type
     audio_type = "Waveform"
     return display_output(data , percent , type , database , audio_type)
 
-def array_names_percents(data : list[tuple[int , float]] , percent : list[float] , type : str , database : str) -> list[str] :
+def array_names_percents(data : list[tuple[int , float]] , percent : list[float] , type : str , database : str) -> list[tuple[str , float]] :
     # DESKRIPSI LOKAL
     # Fungsi untuk mengembalikan kumpulan nama file hasil pencarian yang telah terurut.
 
