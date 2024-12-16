@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geprek Mumbul</title>
+    <link rel="stylesheet" href="./../../static/css/styles.css">
+</head>
+<body>
+    <h2>Hasil Query Audio</h2>
+
+    <div class="display-foto">
+        <div class="display-foto-page">
+            {% for single in singles %}
+                <div class="display-foto-each">
+                    <img src="{{ url_for('static', filename='uploads/database/image/' + single[0]) }}" alt="{{ single[0] }}">
+
+                    <div class="data"> 
+                        <h3>{{ single[2] }}</h3>
+                        <p>Nama File Cover: {{ single[0] }}</p>
+                        <p>Nama File Song: {{ single[1] }}</p>
+                        <h4>{{ single[3] }}%</h4>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="{{ url_for('go_to_menu_query') }}">Kembali</a>
+        <a href="{{ url_for('home') }}">Beranda</a>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

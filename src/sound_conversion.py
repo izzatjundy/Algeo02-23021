@@ -18,11 +18,12 @@
 
 # ALGORITMA
 import mido
-from audio import *
-from pca_computation import *
+from src.audio import *
+from src.pca_computation import *
 import os
-from cosine_similarity import *
 import numpy as np
+from src.cosine_similarity import *
+
 
 def convert_sound(path : str) -> AudioResult :
     # DESKRIPSI LOKAL

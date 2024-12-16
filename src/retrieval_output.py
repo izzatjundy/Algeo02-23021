@@ -24,8 +24,8 @@ import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 from PIL import Image
-from similarity_computation import *
-from cosine_similarity import *
+from src.similarity_computation import *
+from src.cosine_similarity import *
 
 def picture_index(folder_path : str , index : int) -> tuple[str , str] :
     # DESKRIPSI LOKAL

@@ -17,13 +17,13 @@
 # website_information , terminal_information : procedure
 
 # ALGORITMA
-from picture_conversion import *
-from sound_conversion import *
-from data_centering import *
-from pca_computation import *
-from normalisasi_histogram import *
-from similarity_computation import *
-from retrieval_output import *
+from src.picture_conversion import *
+from src.sound_conversion import *
+from src.data_centering import *
+from src.pca_computation import *
+from src.normalisasi_histogram import *
+from src.similarity_computation import *
+from src.retrieval_output import *
 
 def website_information(query : str , type : str , database : str) -> tuple[list[str] , list[float]] :
     # DESKRIPSI LOKAL
