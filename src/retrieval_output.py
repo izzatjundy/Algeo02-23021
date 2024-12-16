@@ -7,15 +7,15 @@
 # NIM/Nama - 3 : 13523092 - Muhammad Izzat Jundy
 # Instansi     : Sekolah Teknik Elektro dan Informatika (STEI) Institut Teknologi Bandung (ITB)
 # Jurusan      : Teknik Informatika (IF)
-# Nama File    : retrival_output.py
+# Nama File    : retrieval_output.py
 # Topik        : Tugas Besar 2 Aljabar Linier dan Geometri 2024 (IF2123-24)
 # Tanggal      : Kamis, 12 Desember 2024
-# Deskripsi    : Subprogram F08 - Retrival & Output
+# Deskripsi    : Subprogram F08 - retrieval & Output
 # PJ F08       : 13523021 - Muhammad Raihan Nazhim Oktana
 
 # KAMUS
 # picture_index , sound_index : function
-# information_retrival , display_output , display_sound , array_names : procedure
+# information_retrieval , display_output , display_sound , array_names : procedure
 
 # ALGORITMA
 import os
@@ -59,7 +59,7 @@ def sound_index(folder_path : str , index : int) -> tuple[str , str] :
     folder = os.listdir(folder_path)
     sounds = []
     for file in folder :
-        if (file.lower().endswith(('.mp3' , '.wav'))) :
+        if (file.lower().endswith(('.mid'))) :
             sounds.append(file)
     name = sounds[index]
     path = os.path.join(folder_path , name)
@@ -95,7 +95,7 @@ def display_audio(path_file : str , audio_type : str) -> None :
     else :
         print("Tipe Audio Tidak Valid.")
 
-def information_retrival(query : list[float] , matrix : list[list[float]] , type : str , database : str , audio_type : str) -> None :
+def information_retrieval(query : list[float] , matrix : list[list[float]] , type : str , database : str , audio_type : str) -> None :
     # DESKRIPSI LOKAL
     # Fungsi untuk melakukan proses pencarian informasi dan melempar ke tipe fungsi output yang bersesuaian.
 
