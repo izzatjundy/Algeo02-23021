@@ -111,16 +111,35 @@ def query_image():
     
     # Check if the file is valid
     if file and allowed_file_image(file.filename):
-        filename = os.path.join(app.config['QUERY_FOLDER_IMAGE'], file.filename)
+        filename = str(app.config['QUERY_FOLDER_IMAGE'] + "\\" + 'query' + '.' + file.filename.split('.')[-1])
         file.save(filename)
 
         images = os.listdir(app.config['DATABASE_FOLDER_IMAGE'])
-        images = [img for img in images if img.endswith(('jpg', 'jpeg', 'png'))]
-        print(str(app.config['QUERY_FOLDER_IMAGE'] + '/' + file.filename))
-        urutan_kemiripan, persentase = website_information(str(app.config['QUERY_FOLDER_IMAGE'] + '/' + file.filename), "picture", app.config['DATABASE_FOLDER_IMAGE'])
-        images_sorted = [img for img in urutan_kemiripan if img in images]
+        images = [image for image in images if image.endswith(('jpg', 'jpeg', 'png'))]
+        filename = str(app.config['QUERY_FOLDER_IMAGE'] + "/" + 'query' + '.' + file.filename.split('.')[-1])
+        print(filename)
+        urutan_kemiripan = website_information(filename, "picture", app.config['DATABASE_FOLDER_IMAGE'])
 
-        return render_template('hasilqueryimage.html', images=images_sorted)
+        print(urutan_kemiripan)
+
+        with open('./static/uploads/database/mapper.txt', 'r') as file:
+            singles = [line.strip() for line in file]
+        singles = [single.split(';') for single in singles]
+
+        singles_sorted_with_percentage = []
+        i = 0
+        while i < len(urutan_kemiripan):
+            j = 0
+            while j < len(singles):
+                if urutan_kemiripan[i][0] != singles[j][0]:
+                    j+=1
+                else:
+                    break
+            if j!=len(singles):singles_sorted_with_percentage.append((singles[j][0], singles[j][1], singles[j][2], round(urutan_kemiripan[i][1] * 100, 1)))
+            else: print("ga ada di folder cuks " + filename + ";" + urutan_kemiripan[i][0])
+            i+=1
+
+        return render_template('hasilqueryimage.html', singles=singles_sorted_with_percentage)
     else:
         return render_template('gagalmenambah.html')
     

@@ -7,21 +7,23 @@
     <link rel="stylesheet" href="./../../static/css/styles.css">
 </head>
 <body>
-    <h2>Cover Album Termirip</h2>
-    <p>Gambar telah diurutkan dari foto yang paling mirip ke yang tidak mirip.</p>
+    <h2>Hasil Query Image</h2>
 
     <div class="display-foto">
         <div class="display-foto-page">
-            {% for image in images %}
+            {% for single in singles %}
                 <div class="display-foto-each">
-                    <img src="{{ url_for('static', filename='uploads/database/image/' + image) }}" alt="{{ image }}">
-                    <p>{{ image }}</p>
+                    <img src="{{ url_for('static', filename='uploads/database/image/' + single[0]) }}" alt="{{ single[0] }}">
+
+                    <div class="data"> 
+                        <h3>{{ single[2] }}</h3>
+                        <p>Nama File Cover: {{ single[0] }}</p>
+                        <p>Nama File Song: {{ single[1] }}</p>
+                        <h4>{{ single[3] }}%</h4>
+                    </div>
                 </div>
             {% endfor %}
         </div>
-
-        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-        <button class="next" onclick="moveSlide(1)">&#10095;</button>
     </div>
 
     <div class="footer">

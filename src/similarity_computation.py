@@ -119,7 +119,7 @@ def minimum_similarity(data : list[list[float]] , target : float) -> tuple[list[
         count = 1 - data[i][1] / bar
         if (count >= target) :
             res.append(data[i])
-            percent.append(round(100 * count))
+            percent.append(count)
     return (res , percent)
 
 def jarak_euclidean(query : list[float] , matrix : list[list[float]]) -> tuple[list[tuple[int , float]] , list[float]] :
