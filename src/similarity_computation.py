@@ -9,7 +9,7 @@
 # Jurusan      : Teknik Informatika (IF)
 # Nama File    : similarity_computation.py
 # Topik        : Tugas Besar 2 Aljabar Linier dan Geometri 2024 (IF2123-24)
-# Tanggal      : Kamis, 12 Desember 2024
+# Tanggal      : Senin, 16 Desember 2024
 # Deskripsi    : Subprogram F05 - Similarity Computation
 # PJ F05       : 13523021 - Muhammad Raihan Nazhim Oktana
 
@@ -18,7 +18,7 @@
 # merge , merge_sort : procedure
 
 # ALGORITMA
-from math import sqrt
+from math import sqrt , exp
 from src.data_centering import *
 from src.pca_computation import *
 
@@ -100,7 +100,29 @@ def count_function(query : list[float] , data : list[float]) -> float :
     res = sqrt(sumq)
     return res
 
-def jarak_euclidean(query : list[float] , matrix : list[list[float]]) -> list[tuple[int , float]] :
+def minimum_similarity(data : list[list[float]] , target : float) -> tuple[list[list[float]] , list[float]] :
+    # DESKRIPSI LOKAL
+    # Membatasi similaritas diatas target yang ditentukan untuk 
+
+    # KAMUS LOKAL
+    # data , res : matrix of float
+    # target , bar , count : float
+    # size : integer
+    # i : integer (index)
+
+    # ALGORITMA LOKAL
+    res = []
+    size = len(data)
+    bar = data[size - 1][1]
+    percent = []
+    for i in range (size) :
+        count = 1 - data[i][1] / bar
+        if (count >= target) :
+            res.append(data[i])
+            percent.append(round(100 * count))
+    return (res , percent)
+
+def jarak_euclidean(query : list[float] , matrix : list[list[float]]) -> tuple[list[tuple[int , float]] , list[float]] :
     # DESKRIPSI LOKAL
     # Menghitung jarak euclidean antara query dengan setiap data di database dan mengurutkannya.
 
@@ -120,5 +142,7 @@ def jarak_euclidean(query : list[float] , matrix : list[list[float]]) -> list[tu
     for i in range (size) :
         distance[i][0] = i + 1
         distance[i][1] = count_function(matrix_query[0] , matrix_z[i])
+    target = 0.55
     data = merge_sort(distance)
-    return data
+    res , percent = minimum_similarity(data , target)
+    return (res , percent)
