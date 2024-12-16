@@ -18,7 +18,7 @@
 # merge , merge_sort : procedure
 
 # ALGORITMA
-from math import sqrt , exp
+from math import sqrt
 from backend.data_centering import *
 from backend.pca_computation import *
 

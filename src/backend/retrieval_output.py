@@ -19,7 +19,6 @@
 
 # ALGORITMA
 import os
-import mido
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt

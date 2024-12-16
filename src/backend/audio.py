@@ -1,6 +1,5 @@
 import mido as md
 import numpy as np
-import typing
 
 WINDOW_SIZE = 20
 

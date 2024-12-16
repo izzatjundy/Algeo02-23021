@@ -21,7 +21,6 @@ from backend.picture_conversion import *
 from backend.sound_conversion import *
 from backend.data_centering import *
 from backend.pca_computation import *
-from backend.normalisasi_histogram import *
 from backend.similarity_computation import *
 from backend.retrieval_output import *
 
@@ -54,17 +53,6 @@ def website_information(query : str , type : str , database : str) -> list[tuple
             return res
         else :
             return data
-    else :
-        matrix = data_sound(database)
-        if (len(matrix) > 1) :
-            matrix = normalize_histogram(matrix)
-            list_query = convert_picture(query)
-            matrix_query = normalize_histogram(list_query)
-            (data , percent) = cosine_function(matrix_query[0] , matrix)
-            res = array_names_percents(data , percent , type , database)
-            return res
-        else :
-            return data
 
 def terminal_information(query : str , type : str , database : str) -> None :
     # DESKRIPSI LOKAL
@@ -89,14 +77,5 @@ def terminal_information(query : str , type : str , database : str) -> None :
             for i in range (size) :
                 list_query[i] = list_query[i] - avg[i]
             information_retrival(list_query , matrix , type , database , audio_type)
-        else :
-            print("Error : Database terlalu sedikit, minimal ada 2 buah data.")
-    else :
-        matrix = data_sound(database)
-        if (len(matrix) > 1) :
-            matrix = normalize_histogram(matrix)
-            list_query = convert_picture(query)
-            matrix_query = normalize_histogram(list_query)
-            information_retrival(matrix_query[0] , matrix , type , database , audio_type)
         else :
             print("Error : Database terlalu sedikit, minimal ada 2 buah data.")
