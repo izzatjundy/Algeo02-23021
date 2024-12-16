@@ -23,7 +23,7 @@ from data_centering import *
 from pca_computation import *
 from normalisasi_histogram import *
 from similarity_computation import *
-from retrival_output import *
+from retrieval_output import *
 
 def website_information(query : str , type : str , database : str) -> tuple[list[str] , list[float]] :
     # DESKRIPSI LOKAL
@@ -79,10 +79,10 @@ def terminal_information(query : str , type : str , database : str) -> None :
         size = len(list_query)
         for i in range (size) :
             list_query[i] = list_query[i] - avg[i]
-        information_retrival(list_query , matrix , type , database , audio_type)
+        information_retrieval(list_query , matrix , type , database , audio_type)
     else :
         matrix = data_sound(database)
         matrix = normalize_histogram(matrix)
         list_query = convert_picture(query)
         matrix_query = normalize_histogram(list_query)
-        information_retrival(matrix_query[0] , matrix , type , database , audio_type)
+        information_retrieval(matrix_query[0] , matrix , type , database , audio_type)
