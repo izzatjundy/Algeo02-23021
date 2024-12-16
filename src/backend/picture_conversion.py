@@ -33,7 +33,7 @@ def convert_picture(path : str) -> list[float] :
     # i : integer (index)
 
     # ALGORITMA LOKAL
-    n = 32
+    n = 16
     img = Image.open(path)
     img = img.resize((n , n) , Image.Resampling.LANCZOS)
     img = img.convert('RGB')
