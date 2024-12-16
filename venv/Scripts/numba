@@ -1,8 +1,0 @@
-#!C:\Users\Izzat\OneDrive - Institut Teknologi Bandung\Documents\STEI-K-ITB\Semester-3\Aljabar-Linier-dan-Geometri\Tubes-2\Algeo02-23021\venv\Scripts\python.exe
-# -*- coding: UTF-8 -*-
-from __future__ import print_function, division, absolute_import
-
-from numba.misc.numba_entry import main
-
-if __name__ == "__main__":
-    main()
