@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geprek Mumbul</title>
+    <link rel="stylesheet" href="./../static/css/styles.css">
+</head>
+<body>
+    <h2>Mencari</h2>
+    <p>Silakan pilih opsi yang sesuai dengan tipe file yang diinginkan.</p>
+
+    <div class="menu">
+        <a href="{{ url_for('go_to_query_image') }}" class="opsi">Image</a>
+        <a href="{{ url_for('go_to_query_audio') }}" class="opsi">Audio</a>
+    </div>
+
+    <a href="{{ url_for('home') }}">Kembali</a>
+    <a href="{{ url_for('home') }}">Beranda</a>
+</body>
+</html>

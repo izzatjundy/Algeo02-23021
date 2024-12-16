@@ -17,6 +17,8 @@
 # convert_sound , data_sound : procedure
 
 # ALGORITMA
+import mido
+
 def convert_sound(path : str) -> list[float] :
     # DESKRIPSI LOKAL
     # ...
