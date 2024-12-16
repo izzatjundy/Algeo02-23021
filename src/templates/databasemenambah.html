@@ -9,10 +9,14 @@
 <body>
     <h2>Menambah Database</h2>
 
+
     <form action="/database/menambah/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="image" required>
-        <input type="file" name="audio" required>
-        <input type="text" name="title" required>
+        <p>File gambar dalam format .zip</p>
+        <input type="file" name="zip_image" required>
+        <p>File suara dalam format .zip</p>
+        <input type="file" name="zip_audio" required>
+        <p>Mapper untuk database tersebut dalam format .txt</p>
+        <input type="file" name="newmapper" required>
         <button type="submit">Upload</button>
     </form>
 

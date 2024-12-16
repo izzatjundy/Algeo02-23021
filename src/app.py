@@ -21,6 +21,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import os
 import datetime
 import math
+import zipfile
 from backend.main_picture import *
 from backend.sound_conversion import *
 
@@ -44,6 +45,12 @@ def allowed_file_image(filename):
 
 def allowed_file_audio(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_AUDIO
+
+def allowed_file_zip(filename):
+    return filename.split('.')[-1] == "zip"
+
+def allowed_file_mapper(filename):
+    return filename.split('.')[-1] == "txt"
 
 # -----------------------------------------------------------------------------------------------
 # JUMP PAGE
@@ -78,20 +85,37 @@ def go_to_query_audio():
 
 @app.route('/database/menambah/upload', methods=['POST'])
 def upload_file():
-    if 'image' not in request.files or 'audio' not in request.files:
+    if 'zip_image' not in request.files or 'zip_audio' not in request.files or 'newmapper' not in request.files:
         return redirect(request.url)
-    image = request.files['image']
-    audio = request.files['audio']
+    zip_image = request.files['zip_image']
+    zip_audio = request.files['zip_audio']
+    newmapper = request.files['newmapper']
     
     # Check if the file is valid
-    if image and allowed_file_image(image.filename) and audio and allowed_file_audio(audio.filename):
-        filenameImage = os.path.join(app.config['DATABASE_FOLDER_IMAGE'], image.filename)
-        filenameAudio = os.path.join(app.config['DATABASE_FOLDER_AUDIO'], audio.filename)
-        image.save(filenameImage)
-        audio.save(filenameAudio)
+    if zip_image and allowed_file_zip(zip_image.filename) and zip_audio and allowed_file_zip(zip_audio.filename) and newmapper and allowed_file_mapper(newmapper.filename):
+        filenameImage = os.path.join(app.config['DATABASE_FOLDER_IMAGE'], zip_image.filename)
+        filenameAudio = os.path.join(app.config['DATABASE_FOLDER_AUDIO'], zip_audio.filename)
+        filenameMapper = os.path.join("static/uploads/database", newmapper.filename)
+        zip_image.save(filenameImage)
+        zip_audio.save(filenameAudio)
+        newmapper.save(filenameMapper)
 
-        with open('./static/uploads/database/mapper.txt', 'a') as file:
-            file.write(image.filename + ";" + audio.filename + ";" + request.form['title'] + "\n")
+        with open('./static/uploads/database/mapper.txt', 'a') as lama:
+            with open(filenameMapper, 'r') as baru:
+                isi = baru.read()
+                lama.write(isi)
+
+        with zipfile.ZipFile(zip_image, 'r') as zip_ref:
+            for zip_info in zip_ref.infolist():
+                zip_ref.extract(zip_info, app.config['DATABASE_FOLDER_IMAGE'])
+
+        with zipfile.ZipFile(zip_audio, 'r') as zip_ref:
+            for zip_info in zip_ref.infolist():
+                zip_ref.extract(zip_info, app.config['DATABASE_FOLDER_AUDIO'])
+
+        os.remove(filenameImage)
+        os.remove(filenameAudio)
+        os.remove(filenameMapper)
 
         return render_template('berhasilmenambah.html')
     else:
