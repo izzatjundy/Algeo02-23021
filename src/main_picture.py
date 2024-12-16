@@ -23,7 +23,7 @@ from src.data_centering import *
 from src.pca_computation import *
 from src.normalisasi_histogram import *
 from src.similarity_computation import *
-from src.retrival_output import *
+from src.retrieval_output import *
 
 def website_information(query : str , type : str , database : str) -> tuple[list[str] , list[float]] :
     # DESKRIPSI LOKAL

@@ -30,8 +30,8 @@ h2 {
 
 h3{
     color: var(--color4);
-    font-size: 150%;
-    margin: 0;
+    font-size: 175%;
+    margin: 0 0 10px 0;
 }
 
 .menu{
@@ -149,6 +149,7 @@ h3{
 
 .display-foto-each p {
     font-size: 14px;
+    margin: 0px;
     color: var(--color3);
 }
 
