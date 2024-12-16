@@ -100,8 +100,3 @@ def terminal_information(query : str , type : str , database : str) -> None :
             information_retrival(matrix_query[0] , matrix , type , database , audio_type)
         else :
             print("Error : Database terlalu sedikit, minimal ada 2 buah data.")
-
-query = "./database/query/q2.jpeg"
-database = "./database/picture"
-type = "picture"
-terminal_information(query , type, database)
