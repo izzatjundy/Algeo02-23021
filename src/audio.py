@@ -53,11 +53,11 @@ def absolute_tone_histogram(midi_file):
                 if beat_count >= WINDOW_SIZE:
                     next = False
                     avg_note = int(weighted_average(notes))
-                    result = [notes[avg_note + i - 12] for i in range(25)]
-                    if avg_note > 12:
-                        result[0] += sum(notes[:avg_note - 13])
+                    result = [notes[avg_note + i - 6] for i in range(13)]
+                    if avg_note > 6:
+                        result[0] += sum(notes[:avg_note - 7])
                     if avg_note < 115:
-                        result[24] += sum(notes[avg_note + 13:])
+                        result[12] += sum(notes[avg_note + 7:])
                     normalize(result)
                     histogram.append(result)
                     break
@@ -76,11 +76,11 @@ def relative_tone_histogram(midi_file):
             prev_note = track[next_msg_idx].note
             notes = [0.0 for i in range(256)]
             beat_count = 0
-            for i, msg in enumerate(track[next_msg_idx+1:]):
+            for i, msg in enumerate(track[next_msg_idx:]):
                 if msg.type == 'end_of_track':
                     next_msg_idx = len(track)
                     break
-                if msg.type == 'note_on' and msg.velocity >= 0:
+                if msg.type == 'note_on' and msg.velocity >= 0 and i > 0:
                     idx = msg.note - prev_note + 128
                     notes[idx] += 1
                     notes[idx+2] += 0.125
@@ -96,7 +96,7 @@ def relative_tone_histogram(midi_file):
                 if beat_count >= WINDOW_SIZE:
                     next = False
                     avg_note = int(weighted_average(notes))
-                    result = [notes[avg_note + i - 12] for i in range(25)]
+                    result = [notes[avg_note + i - 6] for i in range(13)]
                     normalize(result)
                     histogram.append(result)
                     break
@@ -115,7 +115,7 @@ def first_tone_histogram(midi_file):
             prev_note = track[next_msg_idx].note
             notes = [0.0 for i in range(256)]
             beat_count = 0
-            for i, msg in enumerate(track[next_msg_idx+1:]):
+            for i, msg in enumerate(track[next_msg_idx:]):
                 if msg.type == 'end_of_track':
                     next_msg_idx = len(track)
                     break
@@ -134,11 +134,9 @@ def first_tone_histogram(midi_file):
                 if beat_count >= WINDOW_SIZE:
                     next = False
                     avg_note = int(weighted_average(notes))
-                    result = [notes[avg_note + i - 12] for i in range(25)]
+                    result = [notes[avg_note + i - 6] for i in range(13)]
                     normalize(result)
                     histogram.append(result)
-                    notes = [0.0 for i in range(256)]
-                    beat_count = 0
                     break
     return histogram
 

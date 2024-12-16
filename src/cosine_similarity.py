@@ -41,8 +41,10 @@ def cosine_function(vec1 : list[float] , vec2 : list[float]) -> float :
         sum_a2 = sum_a2 + (vec1[i] ** 2)
         sum_b2 = sum_b2 + (vec2[i] ** 2)
         sum_ab = sum_ab + (vec1[i] * vec2[i])
+    if sum_a2 == 0 or sum_b2 == 0:
+        return 0 
     res = sum_ab / (sqrt(sum_a2) * sqrt(sum_b2))
-    return res
+    return (res + 1) / 2
 
 def merge(left : list[tuple[int , float]] , right : list[tuple[int , float]]) -> list[tuple[int , float]] :
     # DESKRIPSI LOKAL
