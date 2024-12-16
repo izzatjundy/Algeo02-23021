@@ -150,6 +150,7 @@ def query_image():
     
     # Check if the file is valid
     if file and allowed_file_image(file.filename):
+        waktuAwal = datetime.datetime.now()
         filename = str(app.config['QUERY_FOLDER_IMAGE'] + "\\" + 'query' + '.' + file.filename.split('.')[-1])
         file.save(filename)
 
@@ -157,12 +158,7 @@ def query_image():
         images = [image for image in images if image.endswith(('jpg', 'jpeg', 'png'))]
         filename = str(app.config['QUERY_FOLDER_IMAGE'] + "/" + 'query' + '.' + file.filename.split('.')[-1])
         print(filename)
-        waktuAwal = datetime.datetime.now()
         urutan_kemiripan = website_information(filename, "picture", app.config['DATABASE_FOLDER_IMAGE'])
-        waktuAkhir = datetime.datetime.now()
-
-        durasi = waktuAkhir - waktuAwal
-        durasiDalamMS = durasi.total_seconds() * 1000
 
         print(urutan_kemiripan)
 
@@ -183,7 +179,12 @@ def query_image():
             else: print("ga ada di folder cuks " + filename + ";" + urutan_kemiripan[i][0])
             i+=1
 
-        return render_template('hasilqueryimage.html', singles=singles_sorted_with_percentage, durasi=durasiDalamMS)
+        waktuAkhir = datetime.datetime.now()
+
+        durasi = waktuAkhir - waktuAwal
+        durasiDalamMS = durasi.total_seconds() * 1000
+
+        return render_template('hasilqueryimage.html', singles=singles_sorted_with_percentage, durasi=round(durasiDalamMS, 2))
     else:
         return render_template('gagalmenambah.html')
     
@@ -195,6 +196,7 @@ def query_audio():
     
     # Check if the file is valid
     if file and allowed_file_audio(file.filename):
+        waktuAwal = datetime.datetime.now()
         filename = str(app.config['QUERY_FOLDER_AUDIO'] + "\\" + 'query' + '.' + file.filename.split('.')[-1])
         file.save(filename)
 
@@ -202,8 +204,8 @@ def query_audio():
         audios = [audio for audio in audios if audio.endswith(('mid', 'midi'))]
         filename = str(app.config['QUERY_FOLDER_AUDIO'] + "/" + 'query' + '.' + file.filename.split('.')[-1])
         print(filename)
-
         urutan_kemiripan = retrieval(app.config['DATABASE_FOLDER_AUDIO'], filename)
+
         for i in range(len(urutan_kemiripan)):
             urutan_kemiripan[i] = (urutan_kemiripan[i][0].split('\\')[-1], urutan_kemiripan[i][1])
 
@@ -226,7 +228,11 @@ def query_audio():
             else: print("ga ada di folder cuks " + filename + ";" + urutan_kemiripan[i][0])
             i+=1
 
-        return render_template('hasilqueryaudio.html', singles=singles_sorted_with_percentage)
+        waktuAkhir = datetime.datetime.now()
+
+        durasi = waktuAkhir - waktuAwal
+        durasiDalamMS = durasi.total_seconds() * 1000
+        return render_template('hasilqueryaudio.html', singles=singles_sorted_with_percentage, durasi=round(durasiDalamMS, 2))
     else:
         return render_template('gagalmenambah.html')
     
