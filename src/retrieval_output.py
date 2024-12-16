@@ -9,8 +9,8 @@
 # Jurusan      : Teknik Informatika (IF)
 # Nama File    : retrieval_output.py
 # Topik        : Tugas Besar 2 Aljabar Linier dan Geometri 2024 (IF2123-24)
-# Tanggal      : Kamis, 12 Desember 2024
-# Deskripsi    : Subprogram F08 - retrieval & Output
+# Tanggal      : Senin, 16 Desember 2024
+# Deskripsi    : Subprogram F08 - Retrival & Output
 # PJ F08       : 13523021 - Muhammad Raihan Nazhim Oktana
 
 # KAMUS
@@ -100,18 +100,18 @@ def information_retrieval(query : list[float] , matrix : list[list[float]] , typ
     # Fungsi untuk melakukan proses pencarian informasi dan melempar ke tipe fungsi output yang bersesuaian.
 
     # KAMUS LOKAL
-    # query : list of float
+    # query , percent : list of float
     # matrix : matrix of float
     # data : list of tuple of integer and float
     # type , database , audio_type : string
 
     # ALGORITMA LOKAL
     if (type == "picture") :
-        data = jarak_euclidean(query , matrix)
+        (data , percent) = jarak_euclidean(query , matrix)
     else :
-        data = cosine_function(query , matrix)
+        (data , percent) = cosine_function(query , matrix)
     audio_type = "Waveform"
-    return display_output(data , type , database , audio_type)
+    return display_output(data , percent , type , database , audio_type)
 
 def array_names(data : list[tuple[int , float]] , type : str , database : str) -> list[str] :
     # DESKRIPSI LOKAL
@@ -137,12 +137,13 @@ def array_names(data : list[tuple[int , float]] , type : str , database : str) -
             res[i] = name
     return res
 
-def display_output(data : list[tuple[int , float]] , type : str , database : str , audio_type : str) -> None :
+def display_output(data : list[tuple[int , float]] , percent : list[float] , type : str , database : str , audio_type : str) -> None :
     # DESKRIPSI LOKAL
     # Fungsi untuk menampilkan output berupa urutan hasil query yang tepat ke layar.
 
     # KAMUS LOKAL
     # data : list of tuple of integer and float
+    # percent : list of float
     # type , database , path , name , audio_type : string
 
     # ALGORITMA LOKAL
@@ -150,11 +151,11 @@ def display_output(data : list[tuple[int , float]] , type : str , database : str
         print("Berikut adalah daftar informasi gambar yang serupa :")
         for i in range (len(data)) :
             (path , name) = picture_index(database , data[i][0] - 1)
-            print(f"{i + 1}. {name}")
+            print(f"{i + 1}. {name}\t({percent[i]}%)")
             Image.open(path)
     else :
         print("Berikut adalah daftar informasi suara yang serupa :")
         for i in range (len(data)) :
             (path , name) = sound_index(database , data[i][0] - 1)
-            print(f"{i + 1}. {name}")
+            print(f"{i + 1}. {name}\t({percent[i]}%")
             display_audio(path , audio_type)

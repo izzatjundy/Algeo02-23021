@@ -51,10 +51,8 @@ def website_information(query : str , type : str , database : str) -> list[str] 
             list_query[i] = list_query[i] - avg[i]
         data = jarak_euclidean(list_query , matrix)
     else :
-        matrix = data_sound(database)
-        matrix = normalize_histogram(matrix)
-        list_query = convert_picture(query)
-        matrix_query = normalize_histogram(list_query)
+        songs = data_sound(database)
+        query = convert_sound(list_query)
         data = cosine_function(matrix_query[0] , matrix)
     names = array_names(data , type , database)
     return names
