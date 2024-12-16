@@ -56,7 +56,7 @@ def data_sound(path_folder : str) -> list[AudioResult] :
             res.append(convert_sound(path_file))
     return res
 
-def retrieval(folder: str, query: str) -> list[str]:
+def retrieval(folder: str, query: str) -> list[tuple[str, float]]:
     songs_data = data_sound(folder)
     query_data = convert_sound(query)
     names = []
@@ -103,6 +103,7 @@ def retrieval(folder: str, query: str) -> list[str]:
             s = cosine_function(query_atb[i], matrix_atb[j])
             s += cosine_function(query_rtb[i], matrix_rtb[j])
             s += cosine_function(query_ftb[i], matrix_ftb[j])
+            s = float(s) / 3
             idx, sim = similarity[j]
             if s > sim:
                 similarity[j] = (idx, s)
