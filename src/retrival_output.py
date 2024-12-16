@@ -15,7 +15,7 @@
 
 # KAMUS
 # picture_index , sound_index : function
-# information_retrival , display_output , display_sound , array_names : procedure
+# information_retrival , display_output , display_sound , array_names_percents : procedure
 
 # ALGORITMA
 import os
@@ -113,28 +113,31 @@ def information_retrival(query : list[float] , matrix : list[list[float]] , type
     audio_type = "Waveform"
     return display_output(data , percent , type , database , audio_type)
 
-def array_names(data : list[tuple[int , float]] , type : str , database : str) -> list[str] :
+def array_names_percents(data : list[tuple[int , float]] , percent : list[float] , type : str , database : str) -> list[str] :
     # DESKRIPSI LOKAL
     # Fungsi untuk mengembalikan kumpulan nama file hasil pencarian yang telah terurut.
 
     # KAMUS LOKAL
     # data : list of tuple of integer and float
     # type , database , name : string
-    # res : list of string
+    # percent : list of float
+    # res : list of tuple of string and float
     # size : integer
     # i : integer (index)
 
     # ALGORITMA LOKAL
     size = len(data)
-    res = ["" for i in range (size)]
+    res = [["" , 0.0] for i in range (size)]
     if (type == "picture") :
         for i in range (len(data)) :
             (_ , name) = picture_index(database , data[i][0] - 1)
-            res[i] = name
+            res[i][0] = name
+            res[i][1] = percent[i]
     else :
         for i in range (len(data)) :
             (_ , name) = sound_index(database , data[i][0] - 1)
             res[i] = name
+            res[i][1] = percent[i]
     return res
 
 def display_output(data : list[tuple[int , float]] , percent : list[float] , type : str , database : str , audio_type : str) -> None :
@@ -147,15 +150,18 @@ def display_output(data : list[tuple[int , float]] , percent : list[float] , typ
     # type , database , path , name , audio_type : string
 
     # ALGORITMA LOKAL
-    if (type == "picture") :
-        print("Berikut adalah daftar informasi gambar yang serupa :")
-        for i in range (len(data)) :
-            (path , name) = picture_index(database , data[i][0] - 1)
-            print(f"{i + 1}. {name}\t({percent[i]}%)")
-            Image.open(path)
+    if (len(data) > 0) :
+        if (type == "picture") :
+            print("Berikut adalah daftar informasi gambar yang serupa :")
+            for i in range (len(data)) :
+                (path , name) = picture_index(database , data[i][0] - 1)
+                print(f"{i + 1}. {name}\t({percent[i]}%)")
+                Image.open(path)
+        else :
+            print("Berikut adalah daftar informasi suara yang serupa :")
+            for i in range (len(data)) :
+                (path , name) = sound_index(database , data[i][0] - 1)
+                print(f"{i + 1}. {name}\t({percent[i]}%")
+                display_audio(path , audio_type)
     else :
-        print("Berikut adalah daftar informasi suara yang serupa :")
-        for i in range (len(data)) :
-            (path , name) = sound_index(database , data[i][0] - 1)
-            print(f"{i + 1}. {name}\t({percent[i]}%")
-            display_audio(path , audio_type)
+        print("Tidak ada daftar informasi gambar pada database yang serupa dengan query (≥55%).")

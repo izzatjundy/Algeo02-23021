@@ -25,14 +25,14 @@ from normalisasi_histogram import *
 from similarity_computation import *
 from retrival_output import *
 
-def website_information(query : str , type : str , database : str) -> tuple[list[str] , list[float]] :
+def website_information(query : str , type : str , database : str) -> list[tuple[str , float]] :
     # DESKRIPSI LOKAL
     # Mengembalikan array of string (file name) ke website.
 
     # KAMUS LOKAL
+    # res : list of tuple of string and float
     # list_query , avg , percent : list of float
     # matrix : matrix of float
-    # names : list of string
     # data : list of tuple of integer and float
     # type , database , query : string
     # size : integer
@@ -42,21 +42,29 @@ def website_information(query : str , type : str , database : str) -> tuple[list
     data = []
     if (type == "picture") :
         matrix = data_picture(database)
-        avg = find_average(matrix)
-        matrix = data_centering(matrix)
-        list_query = convert_picture(query)
-        size = len(list_query)
-        for i in range (size) :
-            list_query[i] = list_query[i] - avg[i]
-        (data , percent) = jarak_euclidean(list_query , matrix)
+        if (len(matrix) > 1) :
+            avg = find_average(matrix)
+            matrix = data_centering(matrix)
+            list_query = convert_picture(query)
+            size = len(list_query)
+            for i in range (size) :
+                list_query[i] = list_query[i] - avg[i]
+            (data , percent) = jarak_euclidean(list_query , matrix)
+            res = array_names_percents(data , percent , type , database)
+            return res
+        else :
+            return data
     else :
         matrix = data_sound(database)
-        matrix = normalize_histogram(matrix)
-        list_query = convert_picture(query)
-        matrix_query = normalize_histogram(list_query)
-        (data , percent) = cosine_function(matrix_query[0] , matrix)
-    names = array_names(data , type , database)
-    return (names , percent)
+        if (len(matrix) > 1) :
+            matrix = normalize_histogram(matrix)
+            list_query = convert_picture(query)
+            matrix_query = normalize_histogram(list_query)
+            (data , percent) = cosine_function(matrix_query[0] , matrix)
+            res = array_names_percents(data , percent , type , database)
+            return res
+        else :
+            return data
 
 def terminal_information(query : str , type : str , database : str) -> None :
     # DESKRIPSI LOKAL
@@ -73,16 +81,27 @@ def terminal_information(query : str , type : str , database : str) -> None :
     audio_type = "Waveform"
     if (type == "picture") :
         matrix = data_picture(database)
-        avg = find_average(matrix)
-        matrix = data_centering(matrix)
-        list_query = convert_picture(query)
-        size = len(list_query)
-        for i in range (size) :
-            list_query[i] = list_query[i] - avg[i]
-        information_retrival(list_query , matrix , type , database , audio_type)
+        if (len(matrix) > 1) :
+            avg = find_average(matrix)
+            matrix = data_centering(matrix)
+            list_query = convert_picture(query)
+            size = len(list_query)
+            for i in range (size) :
+                list_query[i] = list_query[i] - avg[i]
+            information_retrival(list_query , matrix , type , database , audio_type)
+        else :
+            print("Error : Database terlalu sedikit, minimal ada 2 buah data.")
     else :
         matrix = data_sound(database)
-        matrix = normalize_histogram(matrix)
-        list_query = convert_picture(query)
-        matrix_query = normalize_histogram(list_query)
-        information_retrival(matrix_query[0] , matrix , type , database , audio_type)
+        if (len(matrix) > 1) :
+            matrix = normalize_histogram(matrix)
+            list_query = convert_picture(query)
+            matrix_query = normalize_histogram(list_query)
+            information_retrival(matrix_query[0] , matrix , type , database , audio_type)
+        else :
+            print("Error : Database terlalu sedikit, minimal ada 2 buah data.")
+
+query = "./database/query/q2.jpeg"
+database = "./database/picture"
+type = "picture"
+terminal_information(query , type, database)
